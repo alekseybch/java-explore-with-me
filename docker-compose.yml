@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   stats-server:
-    build: stats
+    build: stats-service/stats-server
     container_name: ewm-stats-server
     ports:
       - "9090:9090"
@@ -27,10 +27,10 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - /var/lib/postgresql/data/
-      - ./stats/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./stats-service/stats-server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql
 
   ewm-service:
-    build: main
+    build: main-service
     container_name: ewm-main-service
     ports:
       - "8080:8080"
@@ -58,4 +58,4 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - /var/lib/postgresql/data/
-      - ./main/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./main-service/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql
