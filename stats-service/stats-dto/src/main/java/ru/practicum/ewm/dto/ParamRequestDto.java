@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -13,6 +14,6 @@ public class ParamRequestDto {
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String[] uris;
+    private Set<String> uris;
 
 }

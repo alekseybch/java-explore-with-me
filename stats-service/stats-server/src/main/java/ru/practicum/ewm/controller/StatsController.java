@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/")
@@ -31,13 +32,13 @@ public class StatsController {
     @GetMapping(value = "/stats")
     public List<StatsResponseDto> findStats(@RequestParam String start,
                                             @RequestParam String end,
-                                            @RequestParam String uris,
+                                            @RequestParam Set<String> uris,
                                             @RequestParam(defaultValue = "false") Boolean unique) {
         var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         var paramDto = new ParamRequestDto(
                 LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), formatter),
                 LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), formatter),
-                uris.split(",")
+                uris
         );
         log.info("request to find stats from date = {} to date = {} for uris = {}, unique = {}",
                 paramDto.getStartDate(), paramDto.getEndDate(), paramDto.getUris(), unique);
