@@ -2,13 +2,11 @@ package ru.practicum.ewm.user.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.user.db.repository.UserRepository;
-import ru.practicum.ewm.user.dto.UserRequestDto;
-import ru.practicum.ewm.user.dto.UserResponseDto;
+import ru.practicum.ewm.user.bd.repository.UserRepository;
+import ru.practicum.ewm.user.dto.UserDto;
+import ru.practicum.ewm.user.dto.NewUserRequest;
 import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.service.UserService;
 
@@ -28,27 +26,27 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public List<UserResponseDto> getUsers(Set<Long> ids, Integer from, Integer size) {
+    public List<UserDto> getUsers(Set<Long> ids, Integer from, Integer size) {
         if (ids.isEmpty()) {
-            return userRepository.getAllUsers(getPageable(from, size, Sort.Direction.ASC, "id")).stream()
-                    .map(userMapper::toResponseDto)
+            return userRepository.getAllUsers(getPageable(from, size)).stream()
+                    .map(userMapper::toUserDto)
                     .collect(Collectors.toList());
         }
-        return userRepository.getUsersById(ids, getPageable(from, size, Sort.Direction.ASC, "id")).stream()
-                .map(userMapper::toResponseDto)
+        return userRepository.getUsersById(ids, getPageable(from, size)).stream()
+                .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public UserResponseDto createUser(UserRequestDto userDto) {
+    @Transactional
+    public UserDto createUser(NewUserRequest userDto) {
         var user = userRepository.save(userMapper.toUser(userDto));
         log.info("User with id = {} is saved {}.", user.getId(), user);
-        return userMapper.toResponseDto(user);
+        return userMapper.toUserDto(user);
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
         log.info("User with id = {} is deleted.", userId);

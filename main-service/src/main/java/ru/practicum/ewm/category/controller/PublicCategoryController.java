@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.category.dto.CategoryResponseDto;
+import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.service.CategoryService;
 
 import javax.validation.constraints.Positive;
@@ -21,16 +21,16 @@ public class PublicCategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public List<CategoryResponseDto> getCategories(@PositiveOrZero @RequestParam(value = "from",
+    public List<CategoryDto> getCategories(@PositiveOrZero @RequestParam(value = "from",
                                                   defaultValue = "0") Integer from,
-                                                   @Positive @RequestParam(value = "size",
+                                           @Positive @RequestParam(value = "size",
                                                   defaultValue = "10") Integer size) {
         log.info("Request to get categories, from = {}, size = {}.", from, size);
         return categoryService.getCategories(from, size);
     }
 
     @GetMapping("/{catId}")
-    public CategoryResponseDto getCategory(@Positive @PathVariable Long catId) {
+    public CategoryDto getCategory(@Positive @PathVariable Long catId) {
         log.info("Request to get category with id = {}.", catId);
         return categoryService.getCategory(catId);
     }

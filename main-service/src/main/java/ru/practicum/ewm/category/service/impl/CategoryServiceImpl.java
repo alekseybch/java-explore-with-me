@@ -2,15 +2,14 @@ package ru.practicum.ewm.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.category.db.repository.CategoryRepository;
-import ru.practicum.ewm.category.dto.CategoryRequestDto;
-import ru.practicum.ewm.category.dto.CategoryResponseDto;
+import ru.practicum.ewm.category.bd.repository.CategoryRepository;
+import ru.practicum.ewm.category.dto.CategoryDto;
+import ru.practicum.ewm.category.dto.NewCategoryDto;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.service.CategoryService;
+import ru.practicum.ewm.global.exception.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,17 +26,18 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CategoryResponseDto createCategory(CategoryRequestDto categoryDto) {
+    @Transactional
+    public CategoryDto createCategory(NewCategoryDto categoryDto) {
         var category = categoryRepository.save(categoryMapper.toCategory(categoryDto));
         log.info("Category with id = {} is saved {}.", category.getId(), category);
         return categoryMapper.toResponseDto(category);
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public CategoryResponseDto updateCategory(Long catId, CategoryRequestDto categoryDto) {
-        var category = categoryRepository.getReferenceById(catId);
+    @Transactional
+    public CategoryDto updateCategory(Long catId, NewCategoryDto categoryDto) {
+        var category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new NotFoundException(String.format("Category with id = %d not found", catId)));
         category.setName(categoryDto.getName());
         var updatedCategory = categoryRepository.save(category);
         log.info("Category with id = {} is changed {}.", updatedCategory.getId(), updatedCategory);
@@ -45,22 +45,24 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public void deleteCategory(Long catId) {
         categoryRepository.deleteById(catId);
         log.info("Category with id = {} is deleted.", catId);
     }
 
     @Override
-    public List<CategoryResponseDto> getCategories(Integer from, Integer size) {
-        return categoryRepository.getAllCategories(getPageable(from, size, Sort.Direction.ASC, "id")).stream()
+    public List<CategoryDto> getCategories(Integer from, Integer size) {
+        return categoryRepository.getAllCategories(getPageable(from, size)).stream()
                 .map(categoryMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CategoryResponseDto getCategory(Long catId) {
-        return categoryMapper.toResponseDto(categoryRepository.getReferenceById(catId));
+    public CategoryDto getCategory(Long catId) {
+        var category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new NotFoundException(String.format("Category with id = %d not found", catId)));
+        return categoryMapper.toResponseDto(category);
     }
 
 }
