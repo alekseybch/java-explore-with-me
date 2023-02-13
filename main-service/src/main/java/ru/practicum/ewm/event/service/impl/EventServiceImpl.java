@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.category.bd.repository.CategoryRepository;
+import ru.practicum.ewm.config.DateTimeFormat;
 import ru.practicum.ewm.event.bd.model.Event;
 import ru.practicum.ewm.event.bd.model.enums.EventStatus;
 import ru.practicum.ewm.event.bd.repository.EventRepository;
@@ -217,7 +218,7 @@ public class EventServiceImpl implements EventService {
         Root<Event> eventRoot = criteriaQuery.from(Event.class);
         criteriaQuery.select(eventRoot);
         List<Predicate> predicates = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormat.getDateTimeFormatter();
 
         if (paramDto.getRangeStart() != null && paramDto.getRangeEnd() != null)
             predicates.add(cb.between(eventRoot.get("eventDate"),
@@ -307,7 +308,7 @@ public class EventServiceImpl implements EventService {
         Root<Event> eventRoot = criteriaQuery.from(Event.class);
         criteriaQuery.select(eventRoot);
         List<Predicate> predicates = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormat.getDateTimeFormatter();
 
         if (paramDto.getRangeStart() != null && paramDto.getRangeEnd() != null) {
             predicates.add(cb.between(eventRoot.get("eventDate"),

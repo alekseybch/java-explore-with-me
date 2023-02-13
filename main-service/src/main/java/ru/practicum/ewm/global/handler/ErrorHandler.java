@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.practicum.ewm.config.DateTimeFormat;
 import ru.practicum.ewm.global.exception.ConflictException;
 import ru.practicum.ewm.global.exception.ForbiddenException;
 import ru.practicum.ewm.global.exception.NotFoundException;
@@ -20,7 +21,6 @@ import ru.practicum.ewm.global.exception.NotFoundException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -102,7 +102,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         body.put(REASON, reason);
         body.put(MESSAGE, ex.getMessage());
         body.put(STATUS, status);
-        body.put(TIMESTAMP, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        body.put(TIMESTAMP, LocalDateTime.now().format(DateTimeFormat.getDateTimeFormatter()));
         return body;
     }
 

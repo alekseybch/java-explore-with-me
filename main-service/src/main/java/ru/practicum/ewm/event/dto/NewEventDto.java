@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import lombok.*;
+import ru.practicum.ewm.config.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class NewEventDto {
     @Size(min = 20, max = 7000, message = "must not be less than 20 or more than 7000 characters.")
     private String description;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateTimeFormat.DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
 
     @NotNull(message = "can't be null.")

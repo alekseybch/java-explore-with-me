@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.StatsClient;
+import ru.practicum.ewm.config.DateTimeFormat;
 import ru.practicum.ewm.dto.EndpointHit;
 import ru.practicum.ewm.dto.StatsParameterDto;
 import ru.practicum.ewm.dto.ViewStats;
@@ -17,7 +18,6 @@ import ru.practicum.ewm.dto.ViewStats;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +29,6 @@ public class StatsClientImpl implements StatsClient {
 
     protected final RestTemplate rest;
     protected final ObjectMapper objectMapper;
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final String appName;
 
     @Autowired
@@ -57,8 +56,10 @@ public class StatsClientImpl implements StatsClient {
     public List<ViewStats> findUniqueIpStats(StatsParameterDto paramDto) {
         var path = "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
         Map<String, Object> parameters = Map.of(
-                "start", URLEncoder.encode(paramDto.getStartDate().format(DATE_TIME_FORMATTER), StandardCharsets.UTF_8),
-                "end", URLEncoder.encode(paramDto.getEndDate().format(DATE_TIME_FORMATTER), StandardCharsets.UTF_8),
+                "start", URLEncoder.encode(paramDto.getStartDate().format(DateTimeFormat.getDateTimeFormatter()),
+                        StandardCharsets.UTF_8),
+                "end", URLEncoder.encode(paramDto.getEndDate().format(DateTimeFormat.getDateTimeFormatter()),
+                        StandardCharsets.UTF_8),
                 "uris", paramDto.getUris(),
                 "unique", true
         );
@@ -69,8 +70,10 @@ public class StatsClientImpl implements StatsClient {
     public List<ViewStats> findAllIpStats(StatsParameterDto paramDto) {
         var path = "/stats?start={start}&end={end}&uris={uris}";
         Map<String, Object> parameters = Map.of(
-                "start", URLEncoder.encode(paramDto.getStartDate().format(DATE_TIME_FORMATTER), StandardCharsets.UTF_8),
-                "end", URLEncoder.encode(paramDto.getEndDate().format(DATE_TIME_FORMATTER), StandardCharsets.UTF_8),
+                "start", URLEncoder.encode(paramDto.getStartDate().format(DateTimeFormat.getDateTimeFormatter()),
+                        StandardCharsets.UTF_8),
+                "end", URLEncoder.encode(paramDto.getEndDate().format(DateTimeFormat.getDateTimeFormatter()),
+                        StandardCharsets.UTF_8),
                 "uris", paramDto.getUris()
         );
         return sendStatsRequest(path, parameters);

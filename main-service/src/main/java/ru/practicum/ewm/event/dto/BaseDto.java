@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.ewm.category.dto.CategoryDto;
+import ru.practicum.ewm.config.DateTimeFormat;
 import ru.practicum.ewm.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class BaseDto {
     private CategoryDto category;
     private Integer confirmedRequests;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateTimeFormat.DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
 
     private Long id;
