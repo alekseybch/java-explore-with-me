@@ -1,0 +1,1328 @@
+{
+	"info": {
+		"_postman_id": "b1023b3a-efaf-4c96-91f7-178f79d20d30",
+		"name": "Test Explore With Me - Comments feature",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23153985"
+	},
+	"item": [
+		{
+			"name": "User create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create user\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.name, '\"name\" field').to.eql('user');",
+							"    pm.expect(jsonData.email, '\"email\" field').to.eql('user@user.com');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"user\",\n    \"email\": \"user@user.com\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Category create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create user\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.name, '\"name\" field').to.eql('films');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"films\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/categories",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Event create for user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.title, '\"title\" field').to.eql('event title');",
+							"    pm.expect(jsonData.annotation, '\"annotation\" field').to.eql('the text of the annotaion is more than 20 characters');",
+							"    pm.expect(jsonData.category.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.paid, '\"paid\" field').to.eql(true);",
+							"    pm.expect(jsonData.initiator.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.description, '\"description\" field').to.eql('the text of the description is more than 20 characters');",
+							"    pm.expect(jsonData.participantLimit, '\"participantLimit\" field').to.eql(500);",
+							"    pm.expect(jsonData.state, '\"state\" field').to.eql('PENDING');",
+							"    pm.expect(jsonData.location.lat, '\"lat\" field').to.eql(33.12345);",
+							"    pm.expect(jsonData.location.lon, '\"lon\" field').to.eql(43.54321);",
+							"    pm.expect(jsonData.requestModeration, '\"requestModeration\" field').to.eql(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment');",
+							"",
+							"var eventDate = moment().add(1, 'd');",
+							"pm.environment.set('eventDate', eventDate.format('YYYY-MM-DD HH:mm:ss'));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"annotation\": \"the text of the annotaion is more than 20 characters\",\n    \"category\": \"1\",\n    \"description\": \"the text of the description is more than 20 characters\",\n    \"eventDate\": \"{{eventDate}}\",\n    \"location\": {\n        \"lat\": \"33.12345\",\n        \"lon\": \"43.54321\"\n    },\n    \"paid\": \"true\",\n    \"participantLimit\": \"500\",\n    \"requestModeration\": \"true\",\n    \"title\": \"event title\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/events",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"events"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.title, '\"title\" field').to.eql('event title');",
+							"    pm.expect(jsonData.annotation, '\"annotation\" field').to.eql('the text of the annotaion is more than 20 characters');",
+							"    pm.expect(jsonData.category.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.paid, '\"paid\" field').to.eql(true);",
+							"    pm.expect(jsonData.initiator.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.description, '\"description\" field').to.eql('the text of the description is more than 20 characters');",
+							"    pm.expect(jsonData.participantLimit, '\"participantLimit\" field').to.eql(500);",
+							"    pm.expect(jsonData.state, '\"state\" field').to.eql('PUBLISHED');",
+							"    pm.expect(jsonData.location.lat, '\"lat\" field').to.eql(33.12345);",
+							"    pm.expect(jsonData.location.lon, '\"lon\" field').to.eql(43.54321);",
+							"    pm.expect(jsonData.requestModeration, '\"requestModeration\" field').to.eql(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"stateAction\": \"PUBLISH_EVENT\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/events/:eventId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"events",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User other create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create other user\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
+							"    pm.expect(jsonData.name, '\"name\" field').to.eql('other');",
+							"    pm.expect(jsonData.email, '\"email\" field').to.eql('other@other.com');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"other\",\n    \"email\": \"other@other.com\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request create for user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.requester, '\"requester\" field').to.eql(2);",
+							"    pm.expect(jsonData.event, '\"event\" field').to.eql(1);",
+							"    pm.expect(jsonData.status, '\"status\" field').to.eql('PENDING');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/requests?eventId=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"requests"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comfirmed request1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.confirmedRequests[0].id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.confirmedRequests[0].status, '\"status\" field').to.eql('CONFIRMED');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestIds\": [\n    1\n  ],\n  \"status\": \"CONFIRMED\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/events/:eventId/requests",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"events",
+						":eventId",
+						"requests"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User new create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create other user\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(3);",
+							"    pm.expect(jsonData.name, '\"name\" field').to.eql('new');",
+							"    pm.expect(jsonData.email, '\"email\" field').to.eql('new@new.com');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"new\",\n    \"email\": \"new@new.com\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request create for new user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
+							"    pm.expect(jsonData.requester, '\"requester\" field').to.eql(3);",
+							"    pm.expect(jsonData.event, '\"event\" field').to.eql(1);",
+							"    pm.expect(jsonData.status, '\"status\" field').to.eql('PENDING');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/requests?eventId=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"requests"
+					],
+					"query": [
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment create failed by not confirmed request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([409]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"the text of the comment is more than 20 characters\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:eventId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "3"
+						},
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment create failed by not found user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"the text of the comment is more than 20 characters\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:eventId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "999"
+						},
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment create failed by not found item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"the text of the comment is more than 20 characters\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:eventId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "3"
+						},
+						{
+							"key": "eventId",
+							"value": "999"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment create for user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create user\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData.authorName, '\"authorName\" field').to.eql('other');",
+							"    pm.expect(jsonData.text, '\"text\" field').to.eql('the text of the comment is more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"the text of the comment is more than 20 characters\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:eventId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "2"
+						},
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData.authorName, '\"authorName\" field').to.eql('other');",
+							"    pm.expect(jsonData.text, '\"text\" field').to.eql('the text of the comment is more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/comments/?commentId=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						""
+					],
+					"query": [
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comfirmed request2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.confirmedRequests[0].id, '\"id\" field').to.eql(2);",
+							"    pm.expect(jsonData.confirmedRequests[0].status, '\"status\" field').to.eql('CONFIRMED');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestIds\": [\n    2\n  ],\n  \"status\": \"CONFIRMED\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/events/:eventId/requests",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"events",
+						":eventId",
+						"requests"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "1"
+						},
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment create for user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"pm.test(\"Test create user\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData.authorName, '\"authorName\" field').to.eql('new');",
+							"    pm.expect(jsonData.text, '\"text\" field').to.eql('excellent text, more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"excellent text, more than 20 characters\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/comments/:eventId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"comments",
+						":eventId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "3"
+						},
+						{
+							"key": "eventId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment get all for event1 without param",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData[0].authorName, '\"authorName\" field').to.eql('other');",
+							"    pm.expect(jsonData[0].text, '\"text\" field').to.eql('the text of the comment is more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/comments/1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment get all for event1 with text param",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].id, '\"id\" field').to.eql(2);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData[0].authorName, '\"authorName\" field').to.eql('new');",
+							"    pm.expect(jsonData[0].text, '\"text\" field').to.eql('excellent text, more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/comments/1?text=eXceLLent",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						"1"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "eXceLLent"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment get all for event1 with user param",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData[0].authorName, '\"authorName\" field').to.eql('other');",
+							"    pm.expect(jsonData[0].text, '\"text\" field').to.eql('the text of the comment is more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/comments/1?user=2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						"1"
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment get all for event1 with user and text param",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].id, '\"id\" field').to.eql(2);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData[0].authorName, '\"authorName\" field').to.eql('new');",
+							"    pm.expect(jsonData[0].text, '\"text\" field').to.eql('excellent text, more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/comments/1?text=eXceLLent&user=3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"comments",
+						"1"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "eXceLLent"
+						},
+						{
+							"key": "user",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment update failed by not initiator of comment2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"updated excellent text, more than 20 characters\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId:/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId:",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId:",
+							"value": "2"
+						},
+						{
+							"key": "commentId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment update by user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create user\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData.authorName, '\"authorName\" field').to.eql('new');",
+							"    pm.expect(jsonData.text, '\"text\" field').to.eql('updated excellent text, more than 20 characters');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"updated excellent text, more than 20 characters\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId:/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId:",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId:",
+							"value": "3"
+						},
+						{
+							"key": "commentId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment delete by user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId:/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId:",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "userId:",
+							"value": "3"
+						},
+						{
+							"key": "commentId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin update comment1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"pm.test(\"Test create event\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(1);",
+							"    pm.expect(jsonData.authorName, '\"authorName\" field').to.eql('other');",
+							"    pm.expect(jsonData.text, '\"text\" field').to.eql('updated by admin');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"updated by admin\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin delete comment1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/admin/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "commentId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

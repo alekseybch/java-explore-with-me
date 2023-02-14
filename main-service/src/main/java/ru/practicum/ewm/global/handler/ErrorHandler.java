@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.practicum.ewm.config.DateTimeFormat;
+import ru.practicum.ewm.global.exception.BadRequestException;
 import ru.practicum.ewm.global.exception.ConflictException;
 import ru.practicum.ewm.global.exception.ForbiddenException;
 import ru.practicum.ewm.global.exception.NotFoundException;
@@ -34,7 +35,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     private static final String STATUS = "status";
     private static final String ERROR = "error";
 
-    @ExceptionHandler({NumberFormatException.class})
+    @ExceptionHandler({NumberFormatException.class, BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected Map<String, Object> handleBadRequest(final RuntimeException ex) {
         log.error("Error: {}", ex.getMessage(), ex);
