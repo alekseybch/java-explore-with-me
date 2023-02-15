@@ -13,11 +13,11 @@ import ru.practicum.ewm.comment.dto.NewCommentDto;
 import ru.practicum.ewm.comment.dto.UpdateAdminCommentDto;
 import ru.practicum.ewm.comment.mapper.CommentMapper;
 import ru.practicum.ewm.comment.service.CommentService;
+import ru.practicum.ewm.event.bd.model.enums.EventStatus;
 import ru.practicum.ewm.event.bd.repository.EventRepository;
 import ru.practicum.ewm.global.exception.BadRequestException;
 import ru.practicum.ewm.global.exception.ConflictException;
 import ru.practicum.ewm.global.exception.NotFoundException;
-import ru.practicum.ewm.request.bd.model.enums.RequestStatus;
 import ru.practicum.ewm.user.bd.repository.UserRepository;
 
 import javax.persistence.EntityManager;
@@ -64,6 +64,17 @@ public class CommentServiceImpl implements CommentService {
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+        if (paramDto.getSort() != null) {
+            switch (paramDto.getSort().toLowerCase()) {
+                case "asc":
+                    criteriaQuery.orderBy(cb.asc(commentRoot.get("created")));
+                    break;
+                case "desc":
+                    criteriaQuery.orderBy(cb.desc(commentRoot.get("created")));
+            }
+        }
+
         TypedQuery<Comment> typedQuery = entityManager.createQuery(criteriaQuery);
         PageRequest pageable = getPageable(from, size);
         typedQuery.setFirstResult(pageable.getPageNumber());
@@ -87,12 +98,8 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new NotFoundException(String.format("User with id = %d not found", userId)));
         var event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id = %d not found", eventId)));
-        // only a CONFIRMED requester can comment on the event
-        var isRequester = event.getRequests().stream()
-                .filter(o -> o.getStatus().equals(RequestStatus.CONFIRMED))
-                .anyMatch(o -> o.getRequester().getId().equals(userId));
-        if (!isRequester)
-            throw new ConflictException(String.format("User with id = %d no confirmed requests for event with id = %d", userId, eventId));
+        if (!event.getStatus().equals(EventStatus.PUBLISHED))
+            throw new ConflictException(String.format("Event with id = %d not published", eventId));
         var comment = commentMapper.toComment(commentDto);
         comment.setUser(user);
         comment.setEvent(event);

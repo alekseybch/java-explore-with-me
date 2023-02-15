@@ -2,7 +2,7 @@
   
 ## Возможности дополнительной функциональности  
 - PrivateCommentController  
--- Создание комментария к событиям для одобренных пользователей GET /users/{userId}/comments/{eventId}  
+-- Создание комментария к опубликованным событиям GET /users/{userId}/comments/{eventId}  
 -- Редактирование комментария автором PATCH /users/:userId:/comments/:commentId  
 -- Удаление комментария автором DELETE /users/:userId:/comments/:commentId  
 - AdminCommentController  
@@ -13,6 +13,7 @@
 -- Получение всех комментариев к событию GET /comments/{eventId}  
 -- Поиск комментариев события по тексту GET /comments/{eventId}?text=:text  
 -- Получение всех комментариев события пользователя GET /comments/{eventId}?user=:userId  
+-- Cортировка комментариев по возрастанию или убыванию даты создания GET /comments/{eventId}?sort=:sort
   
 ## ER-диаграмма main-service  
 ![main-service.png](erdiagram%2Fmain-service.png)  

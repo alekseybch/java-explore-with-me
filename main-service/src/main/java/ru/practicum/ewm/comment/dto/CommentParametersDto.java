@@ -12,5 +12,6 @@ public class CommentParametersDto {
     private Long eventId;
     private Long user;
     private String text;
+    private String sort;
 
 }

@@ -25,11 +25,12 @@ public class PublicCommentController {
     public List<CommentDto> getComments(@Positive @PathVariable Long eventId,
                                         @RequestParam(required = false) Long user,
                                         @RequestParam(required = false) String text,
+                                        @RequestParam(required = false) String sort,
                                         @PositiveOrZero @RequestParam(value = "from",
                                                 defaultValue = "0") Integer from,
                                         @Positive @RequestParam(value = "size",
                                                 defaultValue = "10") Integer size) {
-        var paramDto = new CommentParametersDto(eventId, user, text);
+        var paramDto = new CommentParametersDto(eventId, user, text, sort);
         log.info("Request to get comments with parameters = {}, from = {}, size = {}.", paramDto, from, size);
         return commentService.getComments(paramDto, from, size);
     }

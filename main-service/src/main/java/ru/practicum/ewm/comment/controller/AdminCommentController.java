@@ -25,7 +25,7 @@ public class AdminCommentController {
     @PatchMapping("/{commentId}")
     public CommentDto updateCommentByAdmin(@Positive @PathVariable Long commentId,
                                            @NotNull @Valid @RequestBody UpdateAdminCommentDto commentDto) {
-        log.info("[ADMIN] Request to update comment with id = {}.", commentId);
+        log.info("[ADMIN] Request to update comment with id = {}, , comment = {}.", commentId, commentDto);
         return commentService.updateCommentByAdmin(commentId, commentDto);
     }
 

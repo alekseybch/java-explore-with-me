@@ -27,7 +27,8 @@ public class PrivateCommentController {
     public CommentDto createComment(@Positive @PathVariable Long userId,
                                     @Positive @PathVariable Long eventId,
                                     @NotNull @Valid @RequestBody NewCommentDto commentDto) {
-        log.info("Request to create comment on an event with id = {} from user with id = {}.", eventId, userId);
+        log.info("Request to create comment on an event with id = {} from user with id = {}, comment = {}.",
+                eventId, userId, commentDto);
         return commentService.createComment(userId, eventId, commentDto);
     }
 
@@ -35,7 +36,8 @@ public class PrivateCommentController {
     public CommentDto updateComment(@Positive @PathVariable Long userId,
                                     @Positive @PathVariable Long commentId,
                                     @NotNull @Valid @RequestBody NewCommentDto commentDto) {
-        log.info("Request to update comment with id = {} from user with id = {}.", commentId, userId);
+        log.info("Request to update comment with id = {} from user with id = {}, comment = {}.",
+                commentId, userId, commentDto);
         return commentService.updateComment(userId, commentId, commentDto);
     }
 
