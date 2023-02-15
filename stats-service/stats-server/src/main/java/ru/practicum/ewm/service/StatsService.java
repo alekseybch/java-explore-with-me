@@ -1,15 +1,15 @@
 package ru.practicum.ewm.service;
 
-import ru.practicum.ewm.dto.HitRequestDto;
-import ru.practicum.ewm.dto.ParamRequestDto;
-import ru.practicum.ewm.dto.StatsResponseDto;
+import ru.practicum.ewm.dto.EndpointHit;
+import ru.practicum.ewm.dto.StatsParameterDto;
+import ru.practicum.ewm.dto.ViewStats;
 
 import java.util.List;
 
 public interface StatsService {
 
-    void createHit(HitRequestDto hitDto);
+    void createHit(EndpointHit hitDto);
 
-    List<StatsResponseDto> findStats(ParamRequestDto paramDto, Boolean unique);
+    List<ViewStats> findStats(StatsParameterDto paramDto, Boolean unique);
 
 }

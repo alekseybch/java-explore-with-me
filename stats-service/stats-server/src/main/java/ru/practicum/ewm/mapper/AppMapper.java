@@ -2,8 +2,8 @@ package ru.practicum.ewm.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.ewm.db.model.App;
-import ru.practicum.ewm.db.repository.AppRepository;
+import ru.practicum.ewm.bd.model.App;
+import ru.practicum.ewm.bd.repository.AppRepository;
 
 @Component
 @RequiredArgsConstructor
